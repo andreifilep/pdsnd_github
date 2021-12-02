@@ -8,7 +8,15 @@ US Bike share data
 
 ### Description
 The Python code is used to import cleaned data, compute and display descriptive statistics on bike share data.
-Output of the code, depending on initial filtering, is following:
+
+**INPUT:**
+- User will be asked to input city to be analyzed - at the moment only New York, Washington and Chicago may be selected
+- Filter:
+  * filter data by month
+  * filter data by day of week
+
+**OUTPUT:**
+Depending on initial filtering, is following:
 - Popular times of travel
   * most common month
   * most common day of week
