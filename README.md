@@ -43,11 +43,11 @@ Depending on initial filtering, is following:
 
 
 ### Files used
-bikeshare_AF.py
+- bikeshare_AF.py
 *
-chicago.csv
-new_york_city.csv
-washington.csv
+- chicago.csv
+- new_york_city.csv
+- washington.csv
 *
 
 ### Credits

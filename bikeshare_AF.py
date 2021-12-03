@@ -132,6 +132,7 @@ def time_stats(df, city, month, day):
     start_time = time.time()
     # check if all month or days selected for first 2 values
     # display the most common month
+    # value displayed only if filter set to "all"
     if month == "all":
         if df['month_name'].isnull().values.any() == False:
             popular_month = df['month_name'].mode()[0]
@@ -144,6 +145,7 @@ def time_stats(df, city, month, day):
             print("Most popular month is: ", popular_month.upper())
 
     # display the most common day of week
+    # value displayed only if filter set to "all"
     if day == "all":
         if df['weekday_name'].isnull().values.any() == False:
             popular_day = df['weekday_name'].mode()[0]
