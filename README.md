@@ -15,6 +15,11 @@ The Python code is used to import cleaned data, compute and display descriptive 
   * filter data by month
   * filter data by day of week
 
+*
+If data is filtered for a specific month, most common month will not be listed.
+If data is filtered for a specific day, most common day of week will not be shown.
+*
+
 **OUTPUT:**
 Depending on initial filtering, is following:
 - Popular times of travel
