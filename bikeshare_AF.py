@@ -249,8 +249,7 @@ def user_stats(df, city):
 
     # Display counts of user types
     user_types = df['User Type'].value_counts()
-    print("There have been {} subscribers and {} ocasional customers".format(user_types['Subscriber'],
-                                                                             user_types['Customer']))
+    print("There have been {} subscribers and {} ocasional customers".format(user_types['Subscriber'], user_types['Customer']))
 
     # Display counts of gender
     if 'Gender' in df.columns:  # check if Gender column exists
@@ -266,6 +265,14 @@ def user_stats(df, city):
         print("Youngest customer was born in: ", youngest)
         print("Oldest customer was born in:   ", oldest)
         print("Most common year of birth is:  ", common)
+
+    # Display customer gender and proportion of gender
+    if 'Gender' in df.columns:
+        user_gender = df['Gender'].value_counts()
+        male_percent = round((user_gender[0]/df['Gender'].count())*100, 2)
+        female_percent = round(100 - male_percent, 2)
+        print("Percentage of male customer is {} %".format(male_percent))
+        print("Percentage of female customer is {} %".format(female_percent))
 
     print("\nThis took %s seconds." % (time.time() - start_time))
     print('-' * 40)
