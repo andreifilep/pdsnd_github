@@ -251,28 +251,31 @@ def user_stats(df, city):
     user_types = df['User Type'].value_counts()
     print("There have been {} subscribers and {} ocasional customers".format(user_types['Subscriber'], user_types['Customer']))
 
-    # Display counts of gender
+    # Display counts of gender and respective proportion
     if 'Gender' in df.columns:  # check if Gender column exists
         user_gender = df['Gender'].value_counts()
         print("There have been {} male and {} female customers".format(user_gender['Male'], user_gender['Female']))
-
-    # Display earliest, most recent, and most common year of birth
-    if 'Birth Year' in df.columns:
-        youngest = int(df['Birth Year'].max())
-        oldest = int(df['Birth Year'].min())
-        common = int(df['Birth Year'].mode()[0])
-
-        print("Youngest customer was born in: ", youngest)
-        print("Oldest customer was born in:   ", oldest)
-        print("Most common year of birth is:  ", common)
-
-    # Display customer gender and proportion of gender
-    if 'Gender' in df.columns:
-        user_gender = df['Gender'].value_counts()
         male_percent = round((user_gender[0]/df['Gender'].count())*100, 2)
         female_percent = round(100 - male_percent, 2)
         print("Percentage of male customer is {} %".format(male_percent))
         print("Percentage of female customer is {} %".format(female_percent))
+
+    # Display earliest, most recent, and most common year of birth
+    if 'Birth Year' in df.columns:
+        youngest = int(df['Birth Year'].max())
+        youngest_idx = df['Birth Year'].idxmax()
+        rent_year_youngest = df.at[df.index[youngest_idx], 'Start Time'].year
+        rent_age_youngest = rent_year_youngest - youngest
+        oldest = int(df['Birth Year'].min())
+        oldest_idx = df['Birth Year'].idxmin()
+        rent_year_oldest = df.at[df.index[oldest_idx], 'Start Time'].year
+        rent_age_oldest = rent_year_oldest - oldest
+        common = int(df['Birth Year'].mode()[0])
+
+        print("Youngest customer was born in {}. He was {} year old.".format( youngest, rent_age_youngest))
+        print("Oldest customer was born in {}. He was {} year old.".format(oldest, rent_age_oldest))
+        print("Most common year of birth is:  ", common)
+
 
     print("\nThis took %s seconds." % (time.time() - start_time))
     print('-' * 40)
