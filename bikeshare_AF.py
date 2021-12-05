@@ -103,6 +103,10 @@ def load_data(city, month, day):
     raw_data = pd.read_csv(filename,
                            parse_dates=["Start Time", "End Time"])  # read file and convert times to correct format
 
+    # drop NaN values and reset index
+    raw_data = raw_data.dropna()
+    raw_data = raw_data.reset_index(drop=True)
+
     # extend data frame by hour, month and day name
     raw_data['start_hour'] = raw_data["Start Time"].dt.hour  # Start_Time hour
     # raw_data['weekday'] = raw_data["Start Time"].dt.dayofweek # day of week
@@ -119,6 +123,7 @@ def load_data(city, month, day):
     if day != "all":
         df = df.loc[df['weekday_name'] == day.capitalize()]
 
+    print('Data has {} rows.'.format(df.shape[0]))
     return df
 
 
@@ -251,23 +256,34 @@ def user_stats(df, city):
 
     # Display counts of user types
     user_types = df['User Type'].value_counts()
-    print("There have been {} subscribers and {} ocasional customers".format(user_types['Subscriber'],
-                                                                             user_types['Customer']))
+    print("There have been {} subscribers and {} ocasional customers".format(user_types['Subscriber'], user_types['Customer']))
 
-    # Display counts of gender
+    # Display counts of gender and respective proportion
     if 'Gender' in df.columns:  # check if Gender column exists
         user_gender = df['Gender'].value_counts()
         print("There have been {} male and {} female customers".format(user_gender['Male'], user_gender['Female']))
+        male_percent = round((user_gender[0]/df['Gender'].count())*100, 2)
+        female_percent = round(100 - male_percent, 2)
+        print("Percentage of male customer is {} %".format(male_percent))
+        print("Percentage of female customer is {} %".format(female_percent))
 
     # Display earliest, most recent, and most common year of birth
     if 'Birth Year' in df.columns:
-        youngest = int(df['Birth Year'].max())
-        oldest = int(df['Birth Year'].min())
-        common = int(df['Birth Year'].mode()[0])
+        youngest = int(df['Birth Year'].max())  # birth year of youngest customer
+        youngest_idx = df['Birth Year'].idxmax() # row index of birth year
+        print('Row of youngest customer is: ', youngest_idx)
+        rent_year_youngest = df.loc[youngest_idx, 'Start Time'].year # year of rental date
+        rent_age_youngest = rent_year_youngest - youngest # customer age youngest
+        oldest = int(df['Birth Year'].min())    # birth year of oldest customer
+        oldest_idx = df['Birth Year'].idxmin()  # row index of birth year oldest customer
+        rent_year_oldest = df.at[oldest_idx, 'Start Time'].year # year of rental date
+        rent_age_oldest = rent_year_oldest - oldest # customer age oldest
+        common = int(df['Birth Year'].mode()[0])    # most common birth year of customers renting
 
-        print("Youngest customer was born in: ", youngest)
-        print("Oldest customer was born in:   ", oldest)
+        print("Youngest customer was born in {}. He was {} year old.".format( youngest, rent_age_youngest))
+        print("Oldest customer was born in {}. He was {} year old.".format(oldest, rent_age_oldest))
         print("Most common year of birth is:  ", common)
+
 
     print("\nThis took %s seconds." % (time.time() - start_time))
     print('-' * 40)
@@ -304,8 +320,8 @@ def main():
         trip_duration_stats(df, city)
         user_stats(df, city)
 
-        restart = input('\nWould you like to restart? Enter yes or no.\n')
-        if restart.lower() != 'yes':
+        restart = input('\nWould you like to restart? Enter [Y / N].\n')
+        if restart.lower() != ('yes', 'y'):
             break
 
 
